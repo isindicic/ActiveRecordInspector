@@ -1,4 +1,4 @@
-Place Castle.ActiveRecord.dll here
+Place Castle.ActiveRecord.dll here to succesfully compile solution.
 
 
  Directory of .\ActiveRecordInspector.git\libs
