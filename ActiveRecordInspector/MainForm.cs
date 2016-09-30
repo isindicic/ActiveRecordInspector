@@ -21,6 +21,7 @@ namespace SindaSoft.ActiveRecordInspector
         private Inspector ar = null;
         private Dictionary<string, TreeNode> class2treenode;
         private string currentHtml = null;
+        private string currentHtmlBody = null;
 
         public string path2investigate = Directory.GetCurrentDirectory();
 
@@ -137,7 +138,7 @@ namespace SindaSoft.ActiveRecordInspector
             webBrowser1.Document.OpenNew(true);
 
 
-            currentHtml = @"<currentHtml>
+            currentHtml = @"<html>
                                 <style>
                                 body { font-family:Consolas;  }
                                 .vars td { padding: 8px; 	
@@ -145,34 +146,34 @@ namespace SindaSoft.ActiveRecordInspector
                                 </style>
                                 <body>";
 
-            currentHtml += "<table>";
-            currentHtml += "<tr><td>Class name:</td><td>" + si + "</td></tr>";
-            currentHtml += "<tr><td>Filename:</td><td>" + Path.GetFileName(ar.arTypes[si].filename) + "</td></tr>";
-            currentHtml += "<tr><td>Table name:</td><td>" + ar.arTypes[si].table_name + "</td></tr>";
+            currentHtmlBody = "<table>";
+            currentHtmlBody += "<tr><td>Class name:</td><td>" + si + "</td></tr>";
+            currentHtmlBody += "<tr><td>Filename:</td><td>" + Path.GetFileName(ar.arTypes[si].filename) + "</td></tr>";
+            currentHtmlBody += "<tr><td>Table name:</td><td>" + ar.arTypes[si].table_name + "</td></tr>";
             if (!String.IsNullOrEmpty(ar.arTypes[si].DiscriminatorColumn))
-                currentHtml += "<tr><td>Where</td><td>" + ar.arTypes[si].DiscriminatorColumn + "=" + ar.arTypes[si].DiscriminatorValue + "</td></tr>";
+                currentHtmlBody += "<tr><td>Where</td><td>" + ar.arTypes[si].DiscriminatorColumn + "=" + ar.arTypes[si].DiscriminatorValue + "</td></tr>";
 
-            currentHtml += "</table><br><br>";
+            currentHtmlBody += "</table><br><br>";
 
-            currentHtml += "<table class=vars>";
+            currentHtmlBody += "<table class=vars>";
 
-            currentHtml += "<tr bgcolor=#CCCCCC>";
-            currentHtml += "<td>Type</td>";
-            currentHtml += "<td>Class property name</td>";
-            currentHtml += "<td>Database column</td>";
-            currentHtml += "<td>Comment</td>";
-            currentHtml += "</tr>";
+            currentHtmlBody += "<tr bgcolor=#CCCCCC>";
+            currentHtmlBody += "<td>Type</td>";
+            currentHtmlBody += "<td>Class property name</td>";
+            currentHtmlBody += "<td>Database column</td>";
+            currentHtmlBody += "<td>Comment</td>";
+            currentHtmlBody += "</tr>";
 
             int cnt = 0;
             foreach (string k in ar.arTypes[si].columns.Keys)
             {
-                currentHtml += cnt % 2 == 0 ? "<tr>" : "<tr bgcolor=#EEEEEE>";
+                currentHtmlBody += cnt % 2 == 0 ? "<tr>" : "<tr bgcolor=#EEEEEE>";
                 cnt++;
 
-                currentHtml += "<td>";
+                currentHtmlBody += "<td>";
                 if (ar.arTypes[si].columns[k].linked_to_table != null && ar.arTypes[si].columns[k].linked_to_table.Length > 0)
                 {
-                    currentHtml += typeof(Int32).Name + "  ";
+                    currentHtmlBody += typeof(Int32).Name + "  ";
                 }
                 else
                 {
@@ -186,47 +187,49 @@ namespace SindaSoft.ActiveRecordInspector
                     propType = propType.Replace("System.Nullable`1[System.Single]", "Single?");
                     propType = propType.Replace("System.Nullable`1[System.Int32]", "Int32?");
 
-                    currentHtml += propType;
+                    currentHtmlBody += propType;
                 }
 
-                currentHtml += "</td><td>";
-                currentHtml += k;
-                currentHtml += "</td><td>";
+                currentHtmlBody += "</td><td>";
+                currentHtmlBody += k;
+                currentHtmlBody += "</td><td>";
 
-                currentHtml += ar.arTypes[si].columns[k].column_name;
-                currentHtml += "</td><td>";
+                currentHtmlBody += ar.arTypes[si].columns[k].column_name;
+                currentHtmlBody += "</td><td>";
 
                 if (ar.arTypes[si].columns[k].isPrimaryKey)
-                    currentHtml += "<i>Primary key</i>";
+                    currentHtmlBody += "<i>Primary key</i>";
                 else if (ar.arTypes[si].columns[k].linked_to_table!=null && ar.arTypes[si].columns[k].linked_to_table.Length > 0)
-                    currentHtml += " <i>Linked to table</i> " + ar.arTypes[si].columns[k].linked_to_table;
+                    currentHtmlBody += " <i>Linked to table</i> " + ar.arTypes[si].columns[k].linked_to_table;
 
-                currentHtml += "</td>";
+                currentHtmlBody += "</td>";
 
-                currentHtml += "\n";
+                currentHtmlBody += "\n";
                 //if(ar.arTypes[si].columns[k].XmlDoc.Length > 0)
                 //    label1.Text += "                                      " + ar.arTypes[si].columns[k].XmlDoc + "\n";
 
-                currentHtml += "</tr>";
+                currentHtmlBody += "</tr>";
             }
-            currentHtml += "</table>";
-            currentHtml += "<br>";
-            currentHtml += "<br>";
+            currentHtmlBody += "</table>";
+            currentHtmlBody += "<br>";
+            currentHtmlBody += "<br>";
 
 
             string[] arr = ar.arTypes[si].derived.Select(x => x.Name.Replace("`1", "<>")).ToArray();
             if (arr.Length > 0)
             {
-                currentHtml += "C# Class derived from:";
+                currentHtmlBody += "C# Class derived from:";
                 foreach (string c in arr)
                 {
-                    currentHtml += String.Format("<li><a href=#{0}> {0} </a>", c.Replace("<", "&lt;")
+                    currentHtmlBody += String.Format("<li><a href=#{0}> {0} </a>", c.Replace("<", "&lt;")
                                                                          .Replace(">", "&gt;")
                                                                          );
                 }
             }
+
+            currentHtml += currentHtmlBody;
             currentHtml += "</body>";
-            currentHtml += "</currentHtml>";
+            currentHtml += "</html>";
 
             webBrowser1.Document.Write(currentHtml);
             webBrowser1.Refresh();
