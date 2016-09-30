@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ActiveRecordInspector
+namespace SindaSoft.ActiveRecordInspector
 {
     public class ARSingleClassInfo
     {

@@ -8,7 +8,7 @@
     <ProjectGuid>{9C89BA1B-B9FF-45B6-9479-275A4A3A08B1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ActiveRecordInspector</RootNamespace>
+    <RootNamespace>SindaSoft.ActiveRecordInspector</RootNamespace>
     <AssemblyName>ActiveRecordInspector</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

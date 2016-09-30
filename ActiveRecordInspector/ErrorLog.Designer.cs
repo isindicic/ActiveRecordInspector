@@ -1,4 +1,4 @@
-﻿namespace ActiveRecordInspector
+﻿namespace SindaSoft.ActiveRecordInspector
 {
     partial class ErrorLog
     {

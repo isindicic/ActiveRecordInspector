@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Xml;
 using System.Text.RegularExpressions;
 
-namespace ActiveRecordInspector
+namespace SindaSoft.ActiveRecordInspector
 {
     public class Inspector 
     {
