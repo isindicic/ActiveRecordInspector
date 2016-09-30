@@ -46,6 +46,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyDescriptionToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.getAllClassesDescriptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -215,6 +217,8 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.getAllClassesDescriptionToolStripMenuItem,
+            this.toolStripSeparator3,
             this.copyDescriptionToClipboardToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
@@ -226,6 +230,18 @@
             this.copyDescriptionToClipboardToolStripMenuItem.Size = new System.Drawing.Size(276, 24);
             this.copyDescriptionToClipboardToolStripMenuItem.Text = "Copy description to clipboard";
             this.copyDescriptionToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyDescriptionToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(273, 6);
+            // 
+            // getAllClassesDescriptionToolStripMenuItem
+            // 
+            this.getAllClassesDescriptionToolStripMenuItem.Name = "getAllClassesDescriptionToolStripMenuItem";
+            this.getAllClassesDescriptionToolStripMenuItem.Size = new System.Drawing.Size(308, 24);
+            this.getAllClassesDescriptionToolStripMenuItem.Text = "Generate description for all classes";
+            this.getAllClassesDescriptionToolStripMenuItem.Click += new System.EventHandler(this.getAllClassesDescriptionToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -275,6 +291,8 @@
         private System.Windows.Forms.ToolStripMenuItem showErrorLogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyDescriptionToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getAllClassesDescriptionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

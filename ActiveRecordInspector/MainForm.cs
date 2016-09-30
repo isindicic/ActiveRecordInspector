@@ -130,13 +130,21 @@ namespace SindaSoft.ActiveRecordInspector
             }
         }
 
+
         private void generateSingleClassReport(string si)
+        {
+            generateSingleClassReport(si, false);
+        }
+
+        private void generateSingleClassReport(string si, bool dontUpdateWebView)
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            webBrowser1.DocumentText = "0";
-            webBrowser1.Document.OpenNew(true);
-
+            if (!dontUpdateWebView)
+            {
+                webBrowser1.DocumentText = "0";
+                webBrowser1.Document.OpenNew(true);
+            }
 
             currentHtml = @"<html>
                                 <style>
@@ -231,10 +239,44 @@ namespace SindaSoft.ActiveRecordInspector
             currentHtml += "</body>";
             currentHtml += "</html>";
 
+            if (!dontUpdateWebView)
+            {
+                webBrowser1.Document.Write(currentHtml);
+                webBrowser1.Refresh();
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+
+        private void generateAllClassReport()
+        {
+            string htmlBody = "";
+
+            webBrowser1.DocumentText = "0";
+            webBrowser1.Document.OpenNew(true);
+
+            foreach (string className in this.class2treenode.Keys)
+            {
+                generateSingleClassReport(className, true);
+                htmlBody += currentHtmlBody + "<hr>";
+            }
+
+            currentHtml = @"<html>
+                                <style>
+                                body { font-family:Consolas;  }
+                                .vars td { padding: 8px; 	
+                                           vertical-align: top; }
+                                </style>
+                                <body>";
+
+            currentHtml += htmlBody;
+
+            currentHtml += "</body>";
+            currentHtml += "</html>";
             webBrowser1.Document.Write(currentHtml);
             webBrowser1.Refresh();
 
-            Cursor.Current = Cursors.Default;
         }
 
         private void selectFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -313,8 +355,13 @@ namespace SindaSoft.ActiveRecordInspector
             sb.Replace("(*4*)", String.Format("{0,8}", fragmentEnd));
 
             return sb.ToString();
-        }  
+        }
 
+
+        private void getAllClassesDescriptionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.generateAllClassReport();
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
