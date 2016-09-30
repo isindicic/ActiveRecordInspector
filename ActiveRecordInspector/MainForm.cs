@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ActiveRecordInspector
+namespace SindaSoft.ActiveRecordInspector
 {
     public partial class MainForm : Form
     {
@@ -17,8 +17,11 @@ namespace ActiveRecordInspector
             InitializeComponent();
         }
 
-        Timer t = new Timer();
-        Inspector ar = null;
+        private Timer t = new Timer();
+        private Inspector ar = null;
+        private Dictionary<string, TreeNode> class2treenode;
+        private string currentHtml = null;
+
         public string path2investigate = Directory.GetCurrentDirectory();
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -60,6 +63,8 @@ namespace ActiveRecordInspector
             t.Stop();
             Cursor.Current = Cursors.WaitCursor;
 
+            class2treenode = new Dictionary<string, TreeNode>();
+
             ar = new Inspector(path2investigate);
             ar.OnProgress += new EventHandler(ar_OnProgress);
             ar.InitInspector();
@@ -80,7 +85,7 @@ namespace ActiveRecordInspector
                 dummy.Sort();
 
                 foreach (string s in dummy)
-                    tn.Nodes.Add(s);
+                    class2treenode[s] = tn.Nodes.Add(s);
             }
 
             toolStripProgressBar1.Visible = false;
@@ -109,6 +114,9 @@ namespace ActiveRecordInspector
             if (si != null)
             {
                 generateSingleClassReport(si);
+
+                if (class2treenode.ContainsKey(si))
+                    treeView1.SelectedNode = class2treenode[si];
             }
         }
 
@@ -123,11 +131,13 @@ namespace ActiveRecordInspector
 
         private void generateSingleClassReport(string si)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             webBrowser1.DocumentText = "0";
             webBrowser1.Document.OpenNew(true);
 
 
-            string html = @"<html>
+            currentHtml = @"<currentHtml>
                                 <style>
                                 body { font-family:Consolas;  }
                                 .vars td { padding: 8px; 	
@@ -135,34 +145,34 @@ namespace ActiveRecordInspector
                                 </style>
                                 <body>";
 
-            html += "<table>";
-            html += "<tr><td>Class name:</td><td>" + si + "</td></tr>";
-            html += "<tr><td>Filename:</td><td>" + Path.GetFileName(ar.arTypes[si].filename) + "</td></tr>";
-            html += "<tr><td>Table name:</td><td>" + ar.arTypes[si].table_name + "</td></tr>";
+            currentHtml += "<table>";
+            currentHtml += "<tr><td>Class name:</td><td>" + si + "</td></tr>";
+            currentHtml += "<tr><td>Filename:</td><td>" + Path.GetFileName(ar.arTypes[si].filename) + "</td></tr>";
+            currentHtml += "<tr><td>Table name:</td><td>" + ar.arTypes[si].table_name + "</td></tr>";
             if (!String.IsNullOrEmpty(ar.arTypes[si].DiscriminatorColumn))
-                html += "<tr><td>Where</td><td>" + ar.arTypes[si].DiscriminatorColumn + "=" + ar.arTypes[si].DiscriminatorValue + "</td></tr>";
+                currentHtml += "<tr><td>Where</td><td>" + ar.arTypes[si].DiscriminatorColumn + "=" + ar.arTypes[si].DiscriminatorValue + "</td></tr>";
 
-            html += "</table><br><br>";
+            currentHtml += "</table><br><br>";
 
-            html += "<table class=vars>";
+            currentHtml += "<table class=vars>";
 
-            html += "<tr bgcolor=#CCCCCC>";
-            html += "<td>Type</td>";
-            html += "<td>Class property name</td>";
-            html += "<td>Database column</td>";
-            html += "<td>Comment</td>";
-            html += "</tr>";
+            currentHtml += "<tr bgcolor=#CCCCCC>";
+            currentHtml += "<td>Type</td>";
+            currentHtml += "<td>Class property name</td>";
+            currentHtml += "<td>Database column</td>";
+            currentHtml += "<td>Comment</td>";
+            currentHtml += "</tr>";
 
             int cnt = 0;
             foreach (string k in ar.arTypes[si].columns.Keys)
             {
-                html += cnt % 2 == 0 ? "<tr>" : "<tr bgcolor=#EEEEEE>";
+                currentHtml += cnt % 2 == 0 ? "<tr>" : "<tr bgcolor=#EEEEEE>";
                 cnt++;
 
-                html += "<td>";
+                currentHtml += "<td>";
                 if (ar.arTypes[si].columns[k].linked_to_table != null && ar.arTypes[si].columns[k].linked_to_table.Length > 0)
                 {
-                    html += typeof(Int32).Name + "  ";
+                    currentHtml += typeof(Int32).Name + "  ";
                 }
                 else
                 {
@@ -176,50 +186,52 @@ namespace ActiveRecordInspector
                     propType = propType.Replace("System.Nullable`1[System.Single]", "Single?");
                     propType = propType.Replace("System.Nullable`1[System.Int32]", "Int32?");
 
-                    html += propType;
+                    currentHtml += propType;
                 }
 
-                html += "</td><td>";
-                html += k;
-                html += "</td><td>";
+                currentHtml += "</td><td>";
+                currentHtml += k;
+                currentHtml += "</td><td>";
 
-                html += ar.arTypes[si].columns[k].column_name;
-                html += "</td><td>";
+                currentHtml += ar.arTypes[si].columns[k].column_name;
+                currentHtml += "</td><td>";
 
                 if (ar.arTypes[si].columns[k].isPrimaryKey)
-                    html += "<i>Primary key</i>";
+                    currentHtml += "<i>Primary key</i>";
                 else if (ar.arTypes[si].columns[k].linked_to_table!=null && ar.arTypes[si].columns[k].linked_to_table.Length > 0)
-                    html += " <i>Linked to table</i> " + ar.arTypes[si].columns[k].linked_to_table;
+                    currentHtml += " <i>Linked to table</i> " + ar.arTypes[si].columns[k].linked_to_table;
 
-                html += "</td>";
+                currentHtml += "</td>";
 
-                html += "\n";
+                currentHtml += "\n";
                 //if(ar.arTypes[si].columns[k].XmlDoc.Length > 0)
                 //    label1.Text += "                                      " + ar.arTypes[si].columns[k].XmlDoc + "\n";
 
-                html += "</tr>";
+                currentHtml += "</tr>";
             }
-            html += "</table>";
-            html += "<br>";
-            html += "<br>";
+            currentHtml += "</table>";
+            currentHtml += "<br>";
+            currentHtml += "<br>";
 
 
             string[] arr = ar.arTypes[si].derived.Select(x => x.Name.Replace("`1", "<>")).ToArray();
             if (arr.Length > 0)
             {
-                html += "C# Class derived from:";
+                currentHtml += "C# Class derived from:";
                 foreach (string c in arr)
                 {
-                    html += String.Format("<li><a href=#{0}> {0} </a>", c.Replace("<", "&lt;")
+                    currentHtml += String.Format("<li><a href=#{0}> {0} </a>", c.Replace("<", "&lt;")
                                                                          .Replace(">", "&gt;")
                                                                          );
                 }
             }
-            html += "</body>";
-            html += "</html>";
+            currentHtml += "</body>";
+            currentHtml += "</currentHtml>";
 
-            webBrowser1.Document.Write(html);
+            webBrowser1.Document.Write(currentHtml);
             webBrowser1.Refresh();
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void selectFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -267,9 +279,44 @@ namespace ActiveRecordInspector
             el.ShowDialog();
         }
 
+        private void copyDescriptionToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataObject o = new DataObject();
+            o.SetData(DataFormats.Html, PrepareHtmlForClipboard(currentHtml));
+            Clipboard.SetDataObject(o);  
+        }
+
+        private string PrepareHtmlForClipboard(string html)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            const string header = "Format:HTML  Format\nVersion:1.0\nStartHTML:(*1*)\nEndHTML:(*2*)\nStartFragment:(*3*)\nEndFragment:(*4*)\nStartSelection:(*3*)\nEndSelection:(*3*)";
+            sb.Append(header);
+            int startHtml = sb.Length;
+
+            sb.Append(@"<!DOCTYPE HTML PUBLIC  ""-//W3C//DTD HTML 4.0  Transitional//EN""><!--StartFragment-->");
+            int fragmentStart = sb.Length;
+
+            sb.Append(html);
+            int fragmentEnd = sb.Length;
+
+            sb.Append(@"<!--EndFragment-->");
+            int endHtml = sb.Length;
+
+            // Backpatch offsets  
+            sb.Replace("(*1*)", String.Format("{0,8}", startHtml));
+            sb.Replace("(*2*)", String.Format("{0,8}", endHtml));
+            sb.Replace("(*3*)", String.Format("{0,8}", fragmentStart));
+            sb.Replace("(*4*)", String.Format("{0,8}", fragmentEnd));
+
+            return sb.ToString();
+        }  
+
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
         }
+
     }
 }
