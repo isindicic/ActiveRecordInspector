@@ -17,7 +17,7 @@ namespace SindaSoft.ActiveRecordInspector
             InitializeComponent();
         }
 
-        private Timer t = new Timer();
+        private BackgroundWorker b = null;
         private Inspector ar = null;
         private Dictionary<string, TreeNode> class2treenode;
         private string currentHtml = null;
@@ -41,38 +41,44 @@ namespace SindaSoft.ActiveRecordInspector
             toolStripStatusLabel1.Text = "Inspecting ... ";
             toolStripProgressBar1.Visible = true;
 
-            t.Interval = 500;
-            t.Tick += new EventHandler(t_Tick);
-            t.Start();
-        }
-
-        void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-        {
-            if (!String.IsNullOrEmpty(e.Url.Fragment) && e.Url.Fragment.StartsWith("#"))
-            {
-                string clsName = e.Url.Fragment.Substring(1)
-                                               .Replace("%3C", "<")
-                                               .Replace("%3E", ">");
-
-                if (listBox1.Items.Contains(clsName))
-                    listBox1.SelectedItem = clsName;
-            }
-        }
-
-        void t_Tick(object sender, EventArgs e)
-        {
-            t.Stop();
             Cursor.Current = Cursors.WaitCursor;
-            
             listBox1.Items.Clear();
             treeView1.Nodes.Clear();
+            menuStrip1.Enabled = false;
 
-            class2treenode = new Dictionary<string, TreeNode>();
+            b = new BackgroundWorker();
+            b.DoWork += new DoWorkEventHandler(b_DoWork);
+            b.RunWorkerCompleted += new RunWorkerCompletedEventHandler(b_RunWorkerCompleted);
+            b.ProgressChanged += new ProgressChangedEventHandler(b_ProgressChanged);
+            b.WorkerReportsProgress = true;
+            b.WorkerSupportsCancellation = true;
+            b.RunWorkerAsync();
+        }
+
+        void b_DoWork(object sender, DoWorkEventArgs e)
+        {
+            this.class2treenode = new Dictionary<string, TreeNode>();
 
             ar = new Inspector(path2investigate);
             ar.OnProgress += new EventHandler(ar_OnProgress);
             ar.InitInspector();
+        }
 
+        void b_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = 100;
+            toolStripProgressBar1.Value = ar.percentage_progress;
+            toolStripProgressBar1.ProgressBar.Refresh();
+
+            toolStripStatusLabel1.Text = ar.percentage_message;
+            statusStrip1.Refresh();
+
+            //Application.DoEvents(); // Force update... 
+        }
+
+        void b_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             List<string> dummy = new List<string>(ar.arTypes.Keys);
             dummy.Sort();
             foreach (string s in dummy)
@@ -93,25 +99,30 @@ namespace SindaSoft.ActiveRecordInspector
             }
 
             toolStripProgressBar1.Visible = false;
-            toolStripStatusLabel1.Text = "Inspected " + ar.arTypes.Count + " ActiveRecord classes in " + fnames.Count + " modules ("+ this.path2investigate + ")";
+            toolStripStatusLabel1.Text = "Inspected " + ar.arTypes.Count + " ActiveRecord classes in " + fnames.Count + " modules (" + this.path2investigate + ")";
 
             showErrorLogToolStripMenuItem.Enabled = !String.IsNullOrEmpty(ar.error_log);
-
+            menuStrip1.Enabled = true;
             Cursor.Current = Cursors.Default;
+        }
+
+
+        void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            if (!String.IsNullOrEmpty(e.Url.Fragment) && e.Url.Fragment.StartsWith("#"))
+            {
+                string clsName = e.Url.Fragment.Substring(1)
+                                               .Replace("%3C", "<")
+                                               .Replace("%3E", ">");
+
+                if (listBox1.Items.Contains(clsName))
+                    listBox1.SelectedItem = clsName;
+            }
         }
 
         void ar_OnProgress(object sender, EventArgs e)
         {
-            toolStripProgressBar1.Minimum = 0;
-            toolStripProgressBar1.Maximum = ar.maxTypeInspected;
-            toolStripProgressBar1.Value = ar.currentTypeInspected;
-            toolStripProgressBar1.ProgressBar.Refresh();
-
-            toolStripStatusLabel1.Text = String.Format("Inspecting {0} %", 100 * ar.currentTypeInspected / ar.maxTypeInspected);
-            System.Diagnostics.Debug.WriteLine(toolStripStatusLabel1);
-            statusStrip1.Refresh();
-
-            Application.DoEvents(); // Force update... 
+            b.ReportProgress( ar.percentage_progress );
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

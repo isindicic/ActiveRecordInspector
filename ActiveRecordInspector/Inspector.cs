@@ -21,6 +21,9 @@ namespace SindaSoft.ActiveRecordInspector
 
         public string error_log = "";
 
+        public int percentage_progress = 0;
+        public string percentage_message = "";
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -71,6 +74,9 @@ namespace SindaSoft.ActiveRecordInspector
 
                 //------------------------------------------------------------------
                 // Load libs...
+                
+                currentTypeInspected = 0;
+
                 List<Type> allTypes = new List<Type> (); 
                 foreach (string an in files)
                 {
@@ -91,12 +97,18 @@ namespace SindaSoft.ActiveRecordInspector
                         error_log += "Error loading: " + Path.GetFileName(an) + "\n";
                         error_log += "\t" + ex.Message + "\n";
                     }
+
+                    currentTypeInspected++;
+                    percentage_progress = 100 * currentTypeInspected / files.Count;
+                    percentage_message = String.Format("Pass 1 of 2. Inspecting {0} %", percentage_progress);
+
+                    if (OnProgress != null)
+                        OnProgress(this, EventArgs.Empty);
+
                 }
 
                 maxTypeInspected = allTypes.Count;
                 currentTypeInspected = 0;
-
-                int fivePercent = 5 * maxTypeInspected / 100;
 
                 foreach (string an in files)
                 {
@@ -147,7 +159,10 @@ namespace SindaSoft.ActiveRecordInspector
                             }
                             currentTypeInspected++;
 
-                            if(currentTypeInspected % fivePercent == 0  && OnProgress != null)
+                            percentage_progress = 100 * currentTypeInspected / maxTypeInspected;
+                            percentage_message = String.Format("Pass 2 of 2. Inspecting {0} % ({1})", percentage_progress, t.Name);
+
+                            if (percentage_progress % 5 == 0 && OnProgress != null)
                                 OnProgress(this, EventArgs.Empty);
 
                         }
@@ -264,6 +279,7 @@ namespace SindaSoft.ActiveRecordInspector
 
         private string GetXmlDoc(string fname, PropertyInfo pi)
         {
+#if false
             string docuPath = fname.Substring(0, fname.LastIndexOf(".")) + ".xml";
             string retval = "";
             if (File.Exists(docuPath))
@@ -277,6 +293,8 @@ namespace SindaSoft.ActiveRecordInspector
                     retval = Regex.Replace(row.InnerXml, @"\s+", " ");
             }
             return retval;
+#endif
+            return String.Empty;
         }
 
     }
