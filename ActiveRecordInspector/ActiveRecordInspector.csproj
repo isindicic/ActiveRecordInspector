@@ -37,6 +37,9 @@
     <Reference Include="Castle.ActiveRecord">
       <HintPath>..\libs\Castle.ActiveRecord.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Components.Validator">
+      <HintPath>..\libs\Castle.Components.Validator.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

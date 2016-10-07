@@ -63,6 +63,9 @@ namespace SindaSoft.ActiveRecordInspector
         {
             t.Stop();
             Cursor.Current = Cursors.WaitCursor;
+            
+            listBox1.Items.Clear();
+            treeView1.Nodes.Clear();
 
             class2treenode = new Dictionary<string, TreeNode>();
 
