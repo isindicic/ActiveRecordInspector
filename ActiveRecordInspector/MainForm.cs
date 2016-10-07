@@ -105,10 +105,12 @@ namespace SindaSoft.ActiveRecordInspector
             toolStripProgressBar1.Minimum = 0;
             toolStripProgressBar1.Maximum = ar.maxTypeInspected;
             toolStripProgressBar1.Value = ar.currentTypeInspected;
+            toolStripProgressBar1.ProgressBar.Refresh();
 
             toolStripStatusLabel1.Text = String.Format("Inspecting {0} %", 100 * ar.currentTypeInspected / ar.maxTypeInspected);
             System.Diagnostics.Debug.WriteLine(toolStripStatusLabel1);
             statusStrip1.Refresh();
+
             Application.DoEvents(); // Force update... 
         }
 
@@ -286,6 +288,7 @@ namespace SindaSoft.ActiveRecordInspector
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.SelectedPath = this.path2investigate;
+            fbd.Description = "Please locate a folder with class libraries you want to inspect";
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 if (!fbd.SelectedPath.Equals(this.path2investigate))
