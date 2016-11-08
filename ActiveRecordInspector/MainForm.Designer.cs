@@ -45,12 +45,16 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyDescriptionToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.getAllClassesDescriptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.copyDescriptionToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -170,6 +174,8 @@
             this.selectFolderToolStripMenuItem,
             this.toolStripSeparator2,
             this.showErrorLogToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.recentFilesToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -224,24 +230,35 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
             this.editToolStripMenuItem.Text = "Edit";
             // 
-            // copyDescriptionToClipboardToolStripMenuItem
-            // 
-            this.copyDescriptionToClipboardToolStripMenuItem.Name = "copyDescriptionToClipboardToolStripMenuItem";
-            this.copyDescriptionToClipboardToolStripMenuItem.Size = new System.Drawing.Size(276, 24);
-            this.copyDescriptionToClipboardToolStripMenuItem.Text = "Copy description to clipboard";
-            this.copyDescriptionToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyDescriptionToClipboardToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(273, 6);
-            // 
             // getAllClassesDescriptionToolStripMenuItem
             // 
             this.getAllClassesDescriptionToolStripMenuItem.Name = "getAllClassesDescriptionToolStripMenuItem";
             this.getAllClassesDescriptionToolStripMenuItem.Size = new System.Drawing.Size(308, 24);
             this.getAllClassesDescriptionToolStripMenuItem.Text = "Generate description for all classes";
             this.getAllClassesDescriptionToolStripMenuItem.Click += new System.EventHandler(this.getAllClassesDescriptionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(305, 6);
+            // 
+            // copyDescriptionToClipboardToolStripMenuItem
+            // 
+            this.copyDescriptionToClipboardToolStripMenuItem.Name = "copyDescriptionToClipboardToolStripMenuItem";
+            this.copyDescriptionToClipboardToolStripMenuItem.Size = new System.Drawing.Size(308, 24);
+            this.copyDescriptionToClipboardToolStripMenuItem.Text = "Copy description to clipboard";
+            this.copyDescriptionToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyDescriptionToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(173, 6);
+            // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(176, 24);
+            this.recentFilesToolStripMenuItem.Text = "Recent files";
             // 
             // MainForm
             // 
@@ -258,9 +275,11 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -293,6 +312,8 @@
         private System.Windows.Forms.ToolStripMenuItem copyDescriptionToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getAllClassesDescriptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
     }
 }
 

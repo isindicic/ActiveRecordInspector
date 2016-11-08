@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecentFilesManager.cs" />
     <EmbeddedResource Include="ErrorLog.resx">
       <DependentUpon>ErrorLog.cs</DependentUpon>
     </EmbeddedResource>

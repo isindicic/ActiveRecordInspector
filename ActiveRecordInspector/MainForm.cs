@@ -22,8 +22,9 @@ namespace SindaSoft.ActiveRecordInspector
         private Dictionary<string, TreeNode> class2treenode;
         private string currentHtml = null;
         private string currentHtmlBody = null;
+        private RecentFilesManager rfm = null;
 
-        public string path2investigate = Directory.GetCurrentDirectory();
+        public string path2investigate = null;
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -32,7 +33,30 @@ namespace SindaSoft.ActiveRecordInspector
             webBrowser1.Dock = DockStyle.Fill;
             webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
 
+
+            rfm = new RecentFilesManager(this, this.recentFilesToolStripMenuItem);
+            rfm.OnRecentFileSelected += new EventHandler(rfm_OnRecentFileSelected);
+
+
+            if (path2investigate != null)
+                rfm.InsertFileToRecentList(path2investigate);
+            else
+                path2investigate = Directory.GetCurrentDirectory();
+
             StartInspection();
+        }
+
+        private void rfm_OnRecentFileSelected(object sender, EventArgs e)
+        {
+            string sel = rfm.GetSelectedRecentFile();
+
+            if (!sel.Equals(this.path2investigate))
+            {
+                this.path2investigate = sel;
+                this.StartInspection();
+                rfm.InsertFileToRecentList(sel);
+            }
+
         }
 
 
@@ -306,6 +330,7 @@ namespace SindaSoft.ActiveRecordInspector
                 {
                     this.path2investigate = fbd.SelectedPath;
                     this.StartInspection();
+                    rfm.InsertFileToRecentList(fbd.SelectedPath);
                 }
             }
         }
@@ -329,6 +354,7 @@ namespace SindaSoft.ActiveRecordInspector
                 {
                     this.path2investigate = ofd.FileName;
                     this.StartInspection();
+                    rfm.InsertFileToRecentList(ofd.FileName);
                 }
             }
 
