@@ -23,6 +23,7 @@ namespace SindaSoft.ActiveRecordInspector
         private string currentHtml = null;
         private string currentHtmlBody = null;
         private RecentFilesManager rfm = null;
+        private FindForm findform = new FindForm();
 
         public string path2investigate = null;
 
@@ -411,5 +412,46 @@ namespace SindaSoft.ActiveRecordInspector
             Close();
         }
 
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            findform.parent = this;
+            findform.ShowDialog();
+        }
+
+        public HtmlElement GetRootHtmlElement()
+        {
+            try
+            {
+                return webBrowser1.Document.Body;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public int SearchHtmlElement(HtmlElement e, string text, List<HtmlElement> retval, bool ignoreCase)
+        {
+            if (e != null)
+            {
+                foreach (HtmlElement child in e.Children)
+                    SearchHtmlElement(child, text, retval, ignoreCase);
+
+                if (e.Children.Count == 0)
+                {
+                    if (ignoreCase)
+                    {
+                        if (!String.IsNullOrEmpty(e.InnerText) && e.InnerText.ToLower().Contains(text.ToLower()))
+                            retval.Add(e);
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(e.InnerText) && e.InnerText.Contains(text))
+                            retval.Add(e);
+                    }
+                }
+            }
+            return retval.Count();
+        }
     }
 }

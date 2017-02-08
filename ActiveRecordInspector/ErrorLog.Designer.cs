@@ -35,7 +35,7 @@
             // 
             this.tbErrorTxt.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.tbErrorTxt.Location = new System.Drawing.Point(25, 33);
-            this.tbErrorTxt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbErrorTxt.Margin = new System.Windows.Forms.Padding(4);
             this.tbErrorTxt.Multiline = true;
             this.tbErrorTxt.Name = "tbErrorTxt";
             this.tbErrorTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -49,8 +49,9 @@
             this.ClientSize = new System.Drawing.Size(1066, 618);
             this.Controls.Add(this.tbErrorTxt);
             this.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ErrorLog";
+            this.ShowInTaskbar = false;
             this.Text = "ErrorLog";
             this.Load += new System.EventHandler(this.ErrorLog_Load);
             this.ResumeLayout(false);
