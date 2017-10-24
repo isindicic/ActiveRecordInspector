@@ -77,13 +77,16 @@ namespace SindaSoft.ActiveRecordInspector
                 
                 currentTypeInspected = 0;
 
+                Dictionary<string, Assembly> allAssemblies = new Dictionary<string, Assembly>();
                 List<Type> allTypes = new List<Type> (); 
+
                 foreach (string an in files)
                 {
                     try
                     {
                         Assembly a = Assembly.LoadFile(an);
                         List<Type> tt = new List<Type>(a.GetTypes());
+                        allAssemblies[an] = a;
                         allTypes.AddRange(tt);
                     }
                     catch (ReflectionTypeLoadException ex)
@@ -110,9 +113,9 @@ namespace SindaSoft.ActiveRecordInspector
                 maxTypeInspected = allTypes.Count;
                 currentTypeInspected = 0;
 
-                foreach (string an in files)
+                foreach (string an in allAssemblies.Keys)
                 {
-                        Assembly a = Assembly.LoadFile(an);
+                        Assembly a = allAssemblies[an];
                         Type[] tt = a.GetTypes();
                         foreach (Type t in tt)
                         {

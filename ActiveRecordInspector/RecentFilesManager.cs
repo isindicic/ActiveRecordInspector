@@ -129,7 +129,7 @@ namespace SindaSoft.ActiveRecordInspector
             }
             else if (recentFiles.Count > maxNumOfFiles)
             {
-                recentFiles.RemoveAt(recentFiles.Count);
+                recentFiles.RemoveAt(recentFiles.Count - 1);
             }
             recentFiles.Insert(0, fn);
             RebuildRecentFiles();
